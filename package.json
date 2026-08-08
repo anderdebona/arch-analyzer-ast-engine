@@ -20,7 +20,7 @@
     "latex-generator",
     "architecture-analytics"
   ],
-  "author": "Prof. Dr. Ander Debona",
+  "author": "anderdebona",
   "license": "MIT",
   "dependencies": {
     "typescript": "^5.3.3",

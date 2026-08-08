@@ -30,7 +30,7 @@ ${cycleResult.circularDependencies.map((c) => `  \\item \\texttt{${c.join(' $\\r
 \\usepackage{hyperref}
 
 \\title{Automated Software Architecture Metric Report: AST Analysis and Structural Cohesion Assessment}
-\\author{Prof. Dr. Ander Debona \\\\ \\textit{Department of Computer Science \& Software Engineering}}
+\\author{anderdebona \\\\ \\textit{Department of Computer Science \& Software Engineering}}
 \\date{${dateStr}}
 
 \\begin{document}

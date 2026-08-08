@@ -4,7 +4,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-20.0+-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 
-**Author:** Prof. Dr. Ander Debona (Department of Computer Science & Software Engineering)
+**Author:** anderdebona (Department of Computer Science & Software Engineering)
 
 ---
 
@@ -76,7 +76,7 @@ npm test
 
 ```bibtex
 @software{debona2026ast,
-  author = {Debona, Ander},
+  author = {anderdebona},
   title = {AST Architecture Analytics \& Static Metrics Engine},
   year = {2026},
   publisher = {GitHub},
