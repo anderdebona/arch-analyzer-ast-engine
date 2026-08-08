@@ -46,6 +46,16 @@ app.post('/api/analyze', (req, res) => {
   }
 });
 
+import { PrometheusMetricsExporter } from './core/metrics-exporter.js';
+
+app.get('/api/metrics/prometheus', (req, res) => {
+  const sampleCode = `class OrderService { private id: string; public process() { if (this.id) {} } }`;
+  const astResult = ASTParser.parseCode(sampleCode);
+  const metrics = astResult.classes.map((c) => CKMetricsCalculator.calculateMetrics(c));
+  res.setHeader('Content-Type', 'text/plain');
+  res.send(PrometheusMetricsExporter.exportPrometheus(metrics));
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 AST Architecture Analytics Engine running on http://localhost:${PORT}`);
 });
