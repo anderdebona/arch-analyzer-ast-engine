@@ -90,3 +90,47 @@ describe('Dependency Mapper', () => {
     expect(graph.externalDeps).toBe(1);
   });
 });
+
+describe('DeadCodeEliminator (v4.0.0)', () => {
+  it('should identify unreferenced dead code symbols', async () => {
+    const { DeadCodeEliminator } = await import('../src/ast/dead-code-eliminator.js');
+    const modules = [
+      {
+        filePath: 'main.ts',
+        declaredSymbols: [{ name: 'bootstrap', kind: 'function' as const, isExported: true }],
+        referencedSymbols: ['usedService'],
+        importedPaths: ['service.ts'],
+      },
+      {
+        filePath: 'service.ts',
+        declaredSymbols: [
+          { name: 'usedService', kind: 'function' as const, isExported: true },
+          { name: 'unusedHelper', kind: 'function' as const, isExported: false },
+        ],
+        referencedSymbols: [],
+        importedPaths: [],
+      },
+    ];
+
+    const report = DeadCodeEliminator.analyze(['main.ts'], modules);
+    expect(report.totalSymbols).toBe(3);
+    expect(report.deadSymbolsCount).toBe(1);
+    expect(report.deadSymbols[0].symbolName).toBe('unusedHelper');
+  });
+});
+
+describe('SoftwareEntropyAnalyzer (v4.0.0)', () => {
+  it('should compute Shannon entropy and package instability', async () => {
+    const { SoftwareEntropyAnalyzer } = await import('../src/ast/software-entropy.js');
+    const sampleCode = `function test() { const a = 1; return a + 2; }`;
+    const entropy = SoftwareEntropyAnalyzer.calculateTokenEntropy(sampleCode);
+    expect(entropy).toBeGreaterThan(0);
+
+    const instability = SoftwareEntropyAnalyzer.calculateInstability(3, 1);
+    expect(instability).toBeCloseTo(0.75, 2);
+
+    const evalReport = SoftwareEntropyAnalyzer.evaluateModule('sample.ts', sampleCode, 3, 1, 2);
+    expect(evalReport.healthStatus).toBe('HEALTHY');
+  });
+});
+
