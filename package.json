@@ -1,7 +1,7 @@
 {
   "name": "arch-analyzer-ast-engine",
-  "version": "4.0.0",
-  "description": "PhD-Grade Static Analysis & Software Architecture Metrics Engine (CK Metrics, AST Parsing, Tarjan Graph Cycle Detection & LaTeX Report Generator)",
+  "version": "5.0.0",
+  "description": "PhD-Grade Static Analysis & Software Architecture Metrics Engine (Cognitive Complexity, Halstead Metrics, Clean Architecture Boundary Enforcer, Shannon Software Entropy, CK Metrics & LaTeX Generator)",
   "main": "dist/server.js",
   "type": "module",
   "bin": {

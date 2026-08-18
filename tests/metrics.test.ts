@@ -134,3 +134,67 @@ describe('SoftwareEntropyAnalyzer (v4.0.0)', () => {
   });
 });
 
+describe('Cognitive & Halstead Complexity Engine (v5.0.0)', () => {
+  it('should calculate cognitive complexity penalties with nesting increments', async () => {
+    const { CognitiveHalsteadComplexityEngine } = await import('../src/ast/cyclomatic-cognitive-complexity.js');
+    const engine = new CognitiveHalsteadComplexityEngine();
+    const code = `
+      function deep(a, b) {
+        if (a > 0) {
+          for (let i = 0; i < 10; i++) {
+            if (b > 5) {
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+    `;
+    const result = engine.analyzeCognitiveComplexity(code);
+    expect(result.overallCognitiveScore).toBeGreaterThan(3);
+    expect(result.functions[0].breakdown.length).toBeGreaterThanOrEqual(3);
+    expect(result.maintainabilityIndex).toBeGreaterThan(0);
+  });
+
+  it('should compute Halstead vocabulary, volume, difficulty, and effort', async () => {
+    const { CognitiveHalsteadComplexityEngine } = await import('../src/ast/cyclomatic-cognitive-complexity.js');
+    const engine = new CognitiveHalsteadComplexityEngine();
+    const tokens = ['function', 'compute', '(', 'x', ',', 'y', ')', '{', 'if', '(', 'x', '>', 'y', ')', 'return', 'x', '+', '1', ';', '}'];
+    const halstead = engine.calculateHalsteadMetrics(tokens);
+    expect(halstead.vocabulary).toBeGreaterThan(0);
+    expect(halstead.volume).toBeGreaterThan(0);
+    expect(halstead.difficulty).toBeGreaterThan(0);
+    expect(halstead.effort).toBeGreaterThan(0);
+    expect(halstead.estimatedBugs).toBeGreaterThanOrEqual(0);
+  });
+});
+
+describe('ArchitecturalBoundaryEnforcer (v5.0.0)', () => {
+  it('should detect Clean Architecture layer violations when domain imports infrastructure', async () => {
+    const { ArchitecturalBoundaryEnforcer } = await import('../src/ast/architectural-boundary-enforcer.js');
+    const enforcer = new ArchitecturalBoundaryEnforcer();
+    const deps = [
+      { sourceFile: 'domain/user.ts', sourceLayer: 'domain', targetLayer: 'infrastructure', targetFile: 'infra/db.ts' },
+      { sourceFile: 'application/user-service.ts', sourceLayer: 'application', targetLayer: 'domain', targetFile: 'domain/user.ts' },
+    ];
+    const audit = enforcer.auditImports(deps);
+    expect(audit.isCompliant).toBe(false);
+    expect(audit.totalViolations).toBe(1);
+    expect(audit.criticalViolations).toBe(1);
+    expect(audit.overallScore).toBeLessThan(100);
+  });
+
+  it('should approve strictly compliant architectural layers', async () => {
+    const { ArchitecturalBoundaryEnforcer } = await import('../src/ast/architectural-boundary-enforcer.js');
+    const enforcer = new ArchitecturalBoundaryEnforcer();
+    const deps = [
+      { sourceFile: 'application/service.ts', sourceLayer: 'application', targetLayer: 'domain', targetFile: 'domain/entity.ts' },
+      { sourceFile: 'infra/repository.ts', sourceLayer: 'infrastructure', targetLayer: 'application', targetFile: 'application/port.ts' },
+    ];
+    const audit = enforcer.auditImports(deps);
+    expect(audit.isCompliant).toBe(true);
+    expect(audit.overallScore).toBe(100);
+  });
+});
+
+

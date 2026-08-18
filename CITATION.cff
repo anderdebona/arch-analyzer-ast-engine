@@ -5,7 +5,7 @@ authors:
     given-names: "Anderson"
     alias: "anderdebona"
 title: "Arch Analyzer AST Engine: Static Analysis, CK Metrics, Tarjan Cycles, & Software Entropy Analyzer"
-version: 4.0.0
-date-released: 2026-08-13
+version: 5.0.0
+date-released: 2026-08-18
 url: "https://github.com/anderdebona/arch-analyzer-ast-engine"
 license: MIT
